@@ -30,7 +30,7 @@ repositories {
 
 application {
 	// Define the main class for the application.
-	mainClass = 'io.optimism.batcher.HildrBatcher'
+	mainClass = 'io.optimism.proposer.HildrProposer'
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -261,7 +261,7 @@ javadoc {
 jar {
 	dependsOn(configurations.runtimeClasspath)
 	manifest {
-		attributes "Main-Class": "io.optimism.HildrBatcher"
+		attributes "Main-Class": "io.optimism.proposer.HildrProposer"
 	}
 
 	duplicatesStrategy = DuplicatesStrategy.WARN
