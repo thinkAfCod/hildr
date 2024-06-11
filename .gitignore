@@ -8,3 +8,6 @@ build
 */logs
 *.gz
 *.log
+
+json_raw
+reports

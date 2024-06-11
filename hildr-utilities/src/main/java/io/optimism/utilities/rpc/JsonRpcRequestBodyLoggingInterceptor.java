@@ -98,8 +98,8 @@ public class JsonRpcRequestBodyLoggingInterceptor extends AbstractExecutionThrea
     @Override
     protected void run() throws Exception {
         for (; ; ) {
-            readRequest();
-            if (shutdown.get() && dataLength == 0) {
+            readAndWriteRequest();
+            if (shutdown.get()) {
                 break;
             }
             Thread.sleep(250);
@@ -109,30 +109,33 @@ public class JsonRpcRequestBodyLoggingInterceptor extends AbstractExecutionThrea
 
     @Override
     protected void triggerShutdown() {
-        super.triggerShutdown();
         shutdown.compareAndExchange(false, true);
-        LOGGER.info("logging service shutdown, but will write file before");
-//        try {
-//            writeReq();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
+        LOGGER.info("logging service trigger shutdown");
     }
 
-    private void readRequest() throws IOException {
+    @Override
+    protected void shutDown() throws Exception {
+        readAndWriteRequest();
+    }
+
+    private void readAndWriteRequest() throws IOException {
         for (var body = this.queue.poll(); body != null; body = this.queue.poll()) {
             dataLength += body.getBytes(UTF_8).length;
             requestCache.add(body);
             LOGGER.info("add body to queue: cache size: {}, dateLength: {}", requestCache.size(), dataLength);
-            if (dataLength > 200 * 1024 || shutdown.get()) {
+            if (!shutdown.get() && dataLength > 200 * 1024) {
                 writeReq();
             }
+        }
+        if (shutdown.get()) {
+            writeReq();
         }
     }
 
     private void writeReq() throws IOException {
         LOGGER.info("will write cache to file: dateLength: {}", dataLength);
         if (requestCache.isEmpty()) {
+            dataLength = 0;
             return;
         }
         writeToFile(requestCache);

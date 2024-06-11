@@ -113,7 +113,7 @@ public class SplitCapFileTest {
                             .build();
                     Response execute = client.newCall(postReq).execute();
                     Map<String, Object> map = mapper.readValue(execute.body().byteStream(), new TypeReference<>() {});
-
+                    execute.close();
                     if (map.get("result") == null && map.get("error") != null) {
                         System.out.println("throw error when send json: " + line);
                         System.out.println(map);
