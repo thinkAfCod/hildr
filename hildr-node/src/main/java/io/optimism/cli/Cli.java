@@ -43,7 +43,7 @@ public class Cli implements Runnable {
     @Option(names = "--l1-rpc-url", required = true, description = "The l1 chain RPC URL")
     String l1RpcUrl;
 
-    @Option(names = "--l1-ws-rpc-url", required = true, description = "The l1 chain WS RPC URL")
+    @Option(names = "--l1-ws-rpc-url", required = false, description = "The l1 chain WS RPC URL")
     String l1WsRpcUrl;
 
     @Option(names = "--l1-beacon-url", required = true, description = "The l1 chain beacon client RPC URL")
