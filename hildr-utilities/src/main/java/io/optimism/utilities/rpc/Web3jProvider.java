@@ -88,7 +88,9 @@ public class Web3jProvider {
     }
 
     public static void stop() {
-        services.forEach(AbstractExecutionThreadService::stopAsync);
+        services.forEach(service -> {
+            service.stopAsync().awaitTerminated();
+        });
     }
 
     private static void wsConnect(final WebSocketService wss) {

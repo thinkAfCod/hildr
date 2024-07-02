@@ -34,7 +34,7 @@ public class JsonRpcRequestBodyLoggingInterceptor extends AbstractExecutionThrea
 
     private int fileId = 0;
 
-    private String outputParentPath = "./json_raw/";
+    private String outputParentPath = "/Users/xiaqingchuan/WorkSpace/github/rollup/request_rollop/";
 
     int dataLength = 0;
     List<String> requestCache = new ArrayList<>();
@@ -91,7 +91,11 @@ public class JsonRpcRequestBodyLoggingInterceptor extends AbstractExecutionThrea
         if (!shouldLog.apply(requestBody)) {
             return chain.proceed(request);
         }
-        queue.offer(requestBody);
+        for (;;) {
+            if (queue.offer(requestBody)){
+                break;
+            }
+        }
         return chain.proceed(request);
     }
 
@@ -123,9 +127,7 @@ public class JsonRpcRequestBodyLoggingInterceptor extends AbstractExecutionThrea
             dataLength += body.getBytes(UTF_8).length;
             requestCache.add(body);
             LOGGER.info("add body to queue: cache size: {}, dateLength: {}", requestCache.size(), dataLength);
-            if (!shutdown.get() && dataLength > 200 * 1024) {
-                writeReq();
-            }
+            writeReq();
         }
         if (shutdown.get()) {
             writeReq();
