@@ -75,9 +75,11 @@ public class SplitCapFileCopyTest {
                 .build();
 
         // op-geth record
-        var startIndex = 323;
+        var startIndex = 388;
         var endIndex = 0;
-        final var id = 1414257;
+//        final var id = 47989761;
+//        final var id = 1414259;
+        final var id = 4229724;
         //         v24 besu record
         //        var startIndex = 24;
         //        var id = 13171914;
@@ -129,8 +131,6 @@ public class SplitCapFileCopyTest {
                 if (curIndex == endIndex && endId != 0 && jsonRpcId.equals(endId)) {
                     throw new IllegalArgumentException("touched endId: " + endId);
                 }
-            } else if (endId != 0 && jsonRpcId.equals(endId)) {
-                throw new IllegalArgumentException("touched endId: " + endId);
             }
 
             RequestBody requestBody = null;
@@ -143,12 +143,12 @@ public class SplitCapFileCopyTest {
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e);
             }
-            var besuTask = sendRequest(client, urlOpBesu, requestBody);
-            var besuMap = besuTask.get();
-            checkResult(jsonBytes, besuMap);
-//                var gethTask = sendRequest(client, urlOpGeth, requestBody);
-//                var gethMap = gethTask.get();
-//                checkResult(jsonBytes, gethMap);
+//            var besuTask = sendRequest(client, urlOpBesu, requestBody);
+//            var besuMap = besuTask.get();
+//            checkResult(jsonBytes, besuMap);
+            var gethTask = sendRequest(client, urlOpGeth, requestBody);
+            var gethMap = gethTask.get();
+            checkResult(jsonBytes, gethMap);
         });
     }
 
